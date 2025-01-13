@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/LoneLibs.iml" filepath="$PROJECT_DIR$/.idea/LoneLibs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LoneLibs.iml" filepath="$PROJECT_DIR$/LoneLibs.iml" />
     </modules>
   </component>
 </project>
