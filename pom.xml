@@ -208,10 +208,7 @@
             <url>https://erethon.de/repo/</url>
         </repository>
 
-        <repository>
-            <id>matteodev</id>
-            <url>https://www.matteodev.it/spigot/public/maven/</url>
-        </repository>
+
         <repository>
             <id>codemc-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
