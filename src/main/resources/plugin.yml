@@ -1,0 +1,11 @@
+name: LoneLibs
+version: 1.0.63
+main: dev.lone.LoneLibs.Main
+load: STARTUP
+api-version: 1.13
+authors: [LoneDev, others]
+description: Collection of libs used by my plugins
+softdepend:
+  - ViaVersion
+libraries:
+  - org.fusesource.jansi:jansi:2.4.1
