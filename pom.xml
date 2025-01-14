@@ -178,6 +178,12 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <distributionManagement>
+        <repository>
+            <id>ftp-matteodev</id>
+            <url>ftp://ftp.matteodev.it/htdocs/spigot/public/maven/</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -210,7 +216,7 @@
 
         <repository>
             <id>matteodev</id>
-            <url>https://www.matteodev.it/spigot/public/maven/</url>
+            <url>https://maven.devs.beer/</url>
         </repository>
         <repository>
             <id>codemc-repo</id>
