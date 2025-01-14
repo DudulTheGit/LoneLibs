@@ -162,13 +162,6 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ftp</artifactId>
-                <version>3.5.2</version>
-            </extension>
-        </extensions>
     </build>
 
     <pluginRepositories>
@@ -311,7 +304,7 @@
         <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
-            <version>4.3.4-SNAPSHOT</version>
+            <version>4.3.4</version>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
