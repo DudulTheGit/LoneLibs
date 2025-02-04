@@ -47,6 +47,11 @@
       <option name="url" value="https://erethon.de/repo/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="matteodev" />
+      <option name="name" value="matteodev" />
+      <option name="url" value="https://maven.devs.beer/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="central" />
       <option name="url" value="https://repo1.maven.org/maven2" />
