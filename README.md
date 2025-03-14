@@ -1,6 +1,8 @@
 
 ## LoneLibs
 
+This API is outdated and is to be considered deprecated. ItemsAdder and more plugins will stop using this JAR at some point.
+
 This API requires LoneLibs to be added to your dependencies.
 
 ```xml
