@@ -1,30 +1,63 @@
-name: Build JAR
+name: Build LoneLibs (with FastNBT)
 
 on:
   push:
-    branches: [ "main" ]   # atau master, sesuaikan
+    branches: [ main, master ]
+    tags: [ 'v*' ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main, master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17        # versi Java yang dipakai project
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-    - name: Cache Maven deps
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: compiled-jar
-        path: target/*.jar
+      # 1. Checkout repo LoneLibs
+      - name: Checkout LoneLibs
+        uses: actions/checkout@v4
+
+      # 2. Checkout & build FastNBT (dependency yang tidak ada di repo publik)
+      - name: Checkout FastNBT
+        uses: actions/checkout@v4
+        with:
+          repository: LoneDev6/FastNBT
+          path: FastNBT
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build & install FastNBT to local repo
+        run: |
+          cd FastNBT
+          mvn -B clean install
+
+      # 3. Build LoneLibs
+      - name: Build LoneLibs with Maven
+        run: mvn -B clean package
+
+      # 4. Upload artifact (jar) agar bisa di-download dari tab Actions
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoneLibs-jar
+          path: target/*.jar
+
+      # 5. (Opsional) Buat release otomatis bila push tag v*
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/*.jar
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
