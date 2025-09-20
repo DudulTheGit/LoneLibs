@@ -12,32 +12,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Persiapan Java
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # 2. Cache Maven agar tidak download ulang
-      - name: Cache Maven
+      # 1. Cache Maven + BuildTools hasil
+      - name: Cache Maven & BuildTools
         uses: actions/cache@v4
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          path: |
+            ~/.m2
+            ~/buildtools
+          key: ${{ runner.os }}-m2-bt-1.19.4-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2-bt-1.19.4-
 
-      # 3. Download & jalankan BuildTools (akan install spigot+remapped ke local repo)
-      - name: Generate Spigot 1.19.4 remapped jars
+      # 2. Download & jalankan BuildTools (hanya bila cache miss)
+      - name: Generate Spigot 1.19.4 remapped
         run: |
-          mkdir -p buildtools && cd buildtools
-          wget -O BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
-          java -jar BuildTools.jar --rev 1.19.4 --remapped --dont-update
-          cd ..
-        env:
-          SHELL: /bin/bash
+          mkdir -p ~/buildtools && cd ~/buildtools
+          if [ ! -f spigot-1.19.4-R0.1-SNAPSHOT-remapped-mojang.jar ]; then
+            wget -O BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+            java -jar BuildTools.jar --rev 1.19.4 --remapped
+          fi
 
-      # 4. Clone & build FastNBT (butuh remapped-mojang di atas)
+      # 3. Clone & build FastNBT
       - name: Checkout FastNBT
         uses: actions/checkout@v4
         with:
@@ -49,7 +49,7 @@ jobs:
           cd FastNBT
           mvn -B clean install
 
-      # 5. Clone & build LoneLibs
+      # 4. Clone & build LoneLibs
       - name: Checkout LoneLibs
         uses: actions/checkout@v4
         with:
@@ -60,14 +60,14 @@ jobs:
           cd LoneLibs
           mvn -B clean package
 
-      # 6. Upload hasil jar
+      # 5. Upload artefak
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: LoneLibs-jar
           path: LoneLibs/target/*.jar
 
-      # 7. (Opsional) Buat release bila push tag v*
+      # 6. (Opsional) Release otomatis bila tag v*
       - name: Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
